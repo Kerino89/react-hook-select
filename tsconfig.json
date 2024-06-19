@@ -1,10 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2017",
+    "target": "ES2022",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "jsx": "react",
     "strict": true,
     "newLine": "lf",
     "rootDir": ".",
@@ -14,7 +13,7 @@
     "skipLibCheck": false,
     "sourceMap": true,
     "declaration": false,
-    "resolveJsonModule": false,
+    "resolveJsonModule": true,
     "removeComments": true,
     "forceConsistentCasingInFileNames": true,
     "paths": {
