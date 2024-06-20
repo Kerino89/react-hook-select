@@ -2,17 +2,17 @@ import { defineConfig, type Options } from "tsup";
 import path from "node:path";
 import pkj from "./package.json" assert { type: "json" };
 
-type BuildOptions = {
+interface BuildOptions {
   format: "cjs" | "esm";
   minify: boolean;
   target?: "es2017" | "es2018" | "es2019" | "es2020" | "es2021" | "es2022" | "esnext";
   dts?: boolean;
-};
+}
 
-type ConfigOptions = {
+interface ConfigOptions {
   name: string;
   entry: string;
-};
+}
 
 const buildTargets: BuildOptions[] = [
   {
@@ -28,10 +28,7 @@ const buildTargets: BuildOptions[] = [
   },
 ];
 
-const defaultConfig = (
-  { name, entry: entryPoints }: ConfigOptions,
-  options: Options,
-): Options[] => {
+const defaultConfig = ({ name, entry: entryPoints }: ConfigOptions, options: Options): Options[] => {
   const artifactOptions: Options[] = buildTargets.map(({ format, minify, target, dts }) => {
     const extension = format === "esm" ? ".esm.js" : ".cjs.js";
     const entry = { [name]: entryPoints };
