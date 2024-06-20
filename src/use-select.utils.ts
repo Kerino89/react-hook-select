@@ -30,47 +30,40 @@ export const makePropGetter = <
   return mergeProps(props, userProps as Record<string, unknown>) as MergePropGetter<P, U>;
 };
 
-export const flatOptions = (
-  options: Array<SelectOption | SelectGroupOption>,
-): Array<SelectOption> => {
+export const flatOptions = (options: (SelectOption | SelectGroupOption)[]): SelectOption[] => {
   if (!options?.length) return [];
 
   if ("options" in options[0]) {
-    const newOptions: Array<SelectOption> = [];
+    const newOptions: SelectOption[] = [];
 
-    (options as Array<SelectGroupOption>).forEach(({ options }) => {
+    (options as SelectGroupOption[]).forEach(({ options }) => {
       newOptions.push(...options);
     });
 
     return newOptions;
   } else {
-    return options as Array<SelectOption>;
+    return options as SelectOption[];
   }
 };
 
-export const getGroupOptions = (
-  options: Array<SelectOption | SelectGroupOption>,
-): Array<SelectGroupOption> => {
+export const getGroupOptions = (options: (SelectOption | SelectGroupOption)[]): SelectGroupOption[] => {
   if (options.length && "options" in options[0]) {
-    return options as Array<SelectGroupOption>;
+    return options as SelectGroupOption[];
   }
 
-  return [{ options }] as Array<SelectGroupOption>;
+  return [{ options }] as SelectGroupOption[];
 };
 
-export const filterOptions = (options: Array<SelectOption>, value: string): Array<SelectOption> => {
+export const filterOptions = (options: SelectOption[], value: string): SelectOption[] => {
   return options.filter(({ label }) => {
     return String(label).toLowerCase().includes(value.toLowerCase());
   });
 };
 
-export const filterGroupOptions = (
-  options: Array<SelectGroupOption>,
-  value: string,
-): Array<SelectGroupOption> => {
-  const newOptions: Array<SelectGroupOption> = [];
+export const filterGroupOptions = (options: SelectGroupOption[], value: string): SelectGroupOption[] => {
+  const newOptions: SelectGroupOption[] = [];
 
-  (options as Array<SelectGroupOption>).forEach(({ label, options }) => {
+  (options as SelectGroupOption[]).forEach(({ label, options }) => {
     const newFilteredOptions = filterOptions(options, value);
 
     if (newFilteredOptions.length) {
@@ -81,13 +74,13 @@ export const filterGroupOptions = (
   return newOptions;
 };
 
-export const getValues = (option: SelectOption | Array<SelectOption>): Array<SelectValue> => {
+export const getValues = (option: SelectOption | SelectOption[]): SelectValue[] => {
   if (Array.isArray(option)) return option.map(({ value }) => value);
 
   return [option.value];
 };
 
-export const getLabels = (option: SelectOption | Array<SelectOption>): Array<SelectLabel> => {
+export const getLabels = (option: SelectOption | SelectOption[]): SelectLabel[] => {
   if (Array.isArray(option)) return option.map(({ label }) => label);
 
   return [option.label];

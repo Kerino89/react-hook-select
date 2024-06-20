@@ -3,7 +3,7 @@ import type { RefObject } from "react";
 export interface Options {
   disabled?: boolean;
   ignoreRef?: RefObject<HTMLElement>;
-  eventTypes?: Array<EventType>;
+  eventTypes?: EventType[];
 }
 
 export type EventType = "touchstart" | "mousedown";

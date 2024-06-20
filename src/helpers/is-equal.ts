@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export const isEqual = (a: any, b: any): boolean => {
   if (a === b) return true;
 

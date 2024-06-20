@@ -4,7 +4,7 @@ import { hasIgnoreElement } from "./use-on-click-outside.utils";
 import type { RefObject } from "react";
 import type { Handler, AnyEvent, Options, EventType } from "./use-on-click-outside.interface";
 
-const defaultEventTypes: Array<EventType> = ["mousedown", "touchstart"];
+const defaultEventTypes: EventType[] = ["mousedown", "touchstart"];
 
 export const useOnClickOutside = <R extends HTMLElement = HTMLElement>(
   ref: RefObject<R>,

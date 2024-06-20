@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export const isUndefined = (arg: unknown): arg is undefined => arg === undefined;
 
 export const isNull = (arg: unknown): arg is null => arg === null;
@@ -8,7 +10,7 @@ export const isObject = (arg: unknown): arg is object => {
   return arg !== null && typeof arg === "object" && !Array.isArray(arg);
 };
 
-export const isFunction = (arg: unknown): arg is Function => {
+export const isFunction = (arg: unknown): arg is (...rest: any[]) => any => {
   return typeof arg === "function";
 };
 
