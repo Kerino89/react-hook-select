@@ -1,4 +1,5 @@
 name: Release
+
 on:
   push:
     branches: ["1.x", "main", "beta"]
@@ -7,42 +8,60 @@ on:
 
 jobs:
   test:
-    name: Node ${{ matrix.node-version }}"
-    runs-on: ubuntu-latest
-
+    name: "🧪 Test: (Node: ${{ matrix.node-version }})"
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [20.x, 22.x]
+
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ inputs.node-version }} with pnpm
+        uses: ./.github/actions/setup
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm run test:cov
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run linter
+        run: pnpm lint
+
+      - name: Run tests
+        run: pnpm test:cov
 
   release:
     name: "Release"
+
     if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/1.x' }}
     needs: test
+
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v4
+
+      - name: Use Node.js with pnpm
+        uses: ./.github/actions/setup
         with:
-          node-version: "14.x"
-          registry-url: "https://registry.npmjs.org"
+          node-version: "22.x"
+
       - name: Install dependencies
-        run: npm ci
+        run: pnpm i --frozen-lockfile
+
       - name: Build
-        run: npm run build --if-present
+        run: pnpm build
+
       - name: Release
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm run semantic-release
+        run: pnpm semantic-release
