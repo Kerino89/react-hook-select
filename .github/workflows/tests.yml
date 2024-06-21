@@ -11,6 +11,10 @@ on:
     paths-ignore:
       - "docs/**"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: "🧪 Test: (Node: ${{ matrix.node-version }})"
@@ -27,7 +31,7 @@ jobs:
       - name: 📦 Use pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9
 
       - name: ⎔ Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
