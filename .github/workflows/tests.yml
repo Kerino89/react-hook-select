@@ -54,14 +54,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
-      - name: 📥 Install deps
+      - name: Install deps
         run: pnpm i --frozen-lockfile
 
-      - name: 🏭 Build
+      - name: Build
         run: pnpm build
 
-      - name: 🔬 Run linter
+      - name: Run linter
         run: pnpm lint
 
-      - name: 🧪 Run tests
+      - name: Run tests
         run: pnpm test:cov
