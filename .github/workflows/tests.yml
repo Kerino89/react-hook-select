@@ -3,46 +3,47 @@ name: Tests
 on:
   push:
     branches: ["feat/*", "dev", "main"]
+    paths-ignore:
+      - "docs/**"
 
   pull_request:
     branches: ["main", "dev"]
+    paths-ignore:
+      - "docs/**"
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-
+    name: "🧪 Test: (Node: ${{ matrix.node-version }})"
     strategy:
       matrix:
         node-version: [20.x, 22.x, 24.x]
 
-    steps:
-      - uses: actions/checkout@v4
+    runs-on: ubuntu-latest
 
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 📦 Use pnpm
+        uses: pnpm/action-setup@v4
         with:
           version: 8
-          run_install: false
 
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: ⎔ Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          check-latest: true
           cache: "pnpm"
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+      - name: 📥 Install deps
+        run: pnpm i --frozen-lockfile
 
-      - uses: actions/cache@v4
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+      - name: 🏗 Build
+        run: pnpm build
 
-      - run: pnpm i --frozen-lockfile
-      - run: pnpm --if-present build
-      - run: pnpm test:cov
+      - name: 🧪 Run tests
+        run: pnpm test:cov
+
+      - name: Check bundle size
+        run: pnpm size
