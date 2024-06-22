@@ -1,10 +1,7 @@
 import { UseSelectActionsTypes, INITIAL_STATE } from "./use-select.const";
 import type { UseSelectState, UseSelectActionTypes } from "./use-select.interface";
 
-export const selectReducer = (
-  state: UseSelectState = INITIAL_STATE,
-  action: UseSelectActionTypes,
-): UseSelectState => {
+export const selectReducer = (state: UseSelectState = INITIAL_STATE, action: UseSelectActionTypes): UseSelectState => {
   switch (action.type) {
     case UseSelectActionsTypes.OPEN_MENU:
       return {

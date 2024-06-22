@@ -1,0 +1,36 @@
+name: "Node.js with pnpm"
+description: "Setup Node.js with pnpm"
+inputs:
+  node-version:
+    description: "Version Node.js"
+    required: true
+    default: "22.x"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Use pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 9
+        run_install: false
+
+    - name: Use Node.js ${{ inputs.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node-version }}
+        check-latest: true
+        cache: "pnpm"
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: |
+        echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - name: Setup pnpm cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-

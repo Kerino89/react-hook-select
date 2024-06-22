@@ -1,0 +1,46 @@
+name: Tests
+
+on:
+  push:
+    branches: ["feat/*", "dev", "main"]
+    paths-ignore:
+      - "docs/**"
+
+  pull_request:
+    branches: ["main", "dev"]
+    paths-ignore:
+      - "docs/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: "🧪 Test: (Node: ${{ matrix.node-version }})"
+    strategy:
+      matrix:
+        node-version: [20.x, 22.x]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ inputs.node-version }} with pnpm
+        uses: ./.github/actions/setup
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: pnpm i --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Run linter
+        run: pnpm lint
+
+      - name: Run tests
+        run: pnpm test:cov

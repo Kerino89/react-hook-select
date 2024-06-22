@@ -1,5 +1,4 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "jest.debugMode": true,
-  "cSpell.words": ["prebuild"]
+  "cSpell.words": ["commitlint", "compat", "tseslint", "tsup"]
 }

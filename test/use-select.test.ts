@@ -1,11 +1,11 @@
-import { renderHook, act } from "@testing-library/react-hooks";
-import { useSelect, UseSelectProps, UseSelect } from "../src";
+import { renderHook, act } from "@testing-library/react";
+import { useSelect, UseSelectProps } from "../src";
 
 describe("useSelect", () => {
   const initialProps: UseSelectProps = { value: { value: 1, label: "1" } };
 
   const hook = () => {
-    return renderHook<UseSelectProps, UseSelect>((props) => useSelect(props), { initialProps });
+    return renderHook((props) => useSelect(props), { initialProps });
   };
 
   it("return initialProps", () => {

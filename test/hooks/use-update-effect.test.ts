@@ -1,9 +1,9 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react";
 import { useUpdateEffect } from "@hooks/use-update-effect";
 
 describe("Hooks: useUpdateEffect", () => {
   it("run effect on update", () => {
-    const fn = jest.fn();
+    const fn = vi.fn();
     const { rerender } = renderHook(() => useUpdateEffect(fn));
 
     expect(fn).not.toHaveBeenCalled();
@@ -14,8 +14,8 @@ describe("Hooks: useUpdateEffect", () => {
   });
 
   it("run function on unmount", () => {
-    const unmountFn = jest.fn();
-    const fn = jest.fn().mockReturnValue(unmountFn);
+    const unmountFn = vi.fn();
+    const fn = vi.fn().mockReturnValue(unmountFn);
     const { rerender, unmount } = renderHook(() => useUpdateEffect(fn));
 
     rerender();

@@ -3,11 +3,11 @@ import type { MergeSpread } from "./helpers/merge-props";
 import type { Ref, Key, RefObject, HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 export type MergePropGetter<P extends object, U extends PropGetter<object>> = MergeSpread<
-  [P, U extends ReadonlyArray<unknown> ? MergeSpread<U> : U extends (props: P) => infer T ? T : U]
+  [P, U extends readonly unknown[] ? MergeSpread<U> : U extends (props: P) => infer T ? T : U]
 >;
 export type SelectValue = string | number | null;
 export type SelectLabel = string | number | ReactNode;
-export type PropGetter<P> = Partial<P> | ReadonlyArray<Partial<P>> | ((props: P) => Partial<P>);
+export type PropGetter<P> = Partial<P> | readonly Partial<P>[] | ((props: P) => Partial<P>);
 export type WithKeyedProps<P> = P & { key?: Key };
 export type WithRefProps<P, E extends HTMLElement = HTMLElement> = P & { ref?: Ref<E> };
 export type GroupProps<E extends HTMLElement> = WithKeyedProps<HTMLAttributes<E>>;
@@ -43,7 +43,7 @@ interface SetSearchValueAction {
 
 interface SetSelectedAction {
   type: typeof UseSelectActionsTypes.SET_SELECTED;
-  payload: Array<SelectOption>;
+  payload: SelectOption[];
 }
 
 interface AddSelectedAction {
@@ -68,11 +68,11 @@ export interface SelectOption {
 
 export interface SelectGroupOption {
   readonly label?: SelectLabel;
-  readonly options: Array<SelectOption>;
+  readonly options: SelectOption[];
 }
 
 export interface UseSelectGroupOption extends SelectGroupOption {
-  options: Array<UseSelectOption>;
+  options: UseSelectOption[];
   getGroupProps: <E extends HTMLElement>(props?: GroupPropGetter<E>) => GroupProps<E>;
 }
 
@@ -83,7 +83,7 @@ export interface UseSelectOption extends SelectOption {
 
 export interface UseSelectState {
   readonly isOpen: boolean;
-  readonly selected: ReadonlyArray<SelectOption>;
+  readonly selected: readonly SelectOption[];
   readonly searchValue: string;
 }
 
@@ -92,9 +92,9 @@ export interface UseSelectProps {
   onceClickOption?: boolean;
   isSearchable?: boolean;
   disabled?: boolean;
-  value?: null | SelectOption | Array<SelectOption>;
-  options?: Array<SelectOption | SelectGroupOption>;
-  onChange?: (value: SelectOption | Array<SelectOption>) => void;
+  value?: null | SelectOption | SelectOption[];
+  options?: (SelectOption | SelectGroupOption)[];
+  onChange?: (value: SelectOption | SelectOption[]) => void;
 }
 
 export interface UseSelect {
@@ -102,8 +102,8 @@ export interface UseSelect {
   selectRef: RefObject<HTMLElement>;
   optionsRef: RefObject<HTMLElement>;
   isGroup: boolean;
-  groupOptions: Array<UseSelectGroupOption>;
-  setSelected: (payload: Array<SelectOption>) => void;
+  groupOptions: UseSelectGroupOption[];
+  setSelected: (payload: SelectOption[]) => void;
   addSelected: (payload: SelectOption) => void;
   removeSelected: (payload: SelectOption | SelectValue) => void;
   hideOptions: () => void;

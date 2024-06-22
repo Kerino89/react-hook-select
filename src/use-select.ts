@@ -5,12 +5,7 @@ import { usePrevious } from "@hooks/use-previous";
 import { isEqual } from "@helpers/is-equal";
 import { isEmpty, isUndefined, isFunction, isNil } from "@helpers/type-guards";
 import { UseSelectActionsTypes, INITIAL_STATE } from "./use-select.const";
-import {
-  getGroupOptions,
-  filterOptions,
-  filterGroupOptions,
-  makePropGetter,
-} from "./use-select.utils";
+import { getGroupOptions, filterOptions, filterGroupOptions, makePropGetter } from "./use-select.utils";
 import { selectReducer } from "./use-select.reducer";
 
 import type { RefObject, ChangeEvent } from "react";
@@ -68,7 +63,7 @@ export const useSelect = ({
     }
   }, [isSearchable, state.isOpen]);
 
-  const setSelected = useCallback((payload: Array<SelectOption>) => {
+  const setSelected = useCallback((payload: SelectOption[]) => {
     dispatch({ type: UseSelectActionsTypes.SET_SELECTED, payload });
   }, []);
 
@@ -98,7 +93,7 @@ export const useSelect = ({
   }, []);
 
   const handleChangeOrSetSelected = useCallback(
-    (selected: Array<SelectOption>) => {
+    (selected: SelectOption[]) => {
       if (isFunction(onChange) && !isUndefined(value)) {
         onChange(selected);
       } else {
@@ -120,13 +115,13 @@ export const useSelect = ({
     if (isEmpty(state.searchValue)) return void 0;
 
     if (isGroup) {
-      return filterGroupOptions(options as Array<SelectGroupOption>, state.searchValue);
+      return filterGroupOptions(options as SelectGroupOption[], state.searchValue);
     } else {
-      return filterOptions(options as Array<SelectOption>, state.searchValue);
+      return filterOptions(options as SelectOption[], state.searchValue);
     }
   }, [options, isGroup, state.searchValue]);
 
-  const groupOptions = useMemo((): Array<UseSelectGroupOption> => {
+  const groupOptions = useMemo((): UseSelectGroupOption[] => {
     if (!options?.length) return [];
 
     return getGroupOptions(filteredOptions || options).map((group, i) => ({
@@ -159,9 +154,7 @@ export const useSelect = ({
                     if (!isActive) {
                       handleChangeOrSetSelected([...state.selected, payload]);
                     } else {
-                      handleChangeOrSetSelected(
-                        state.selected.filter(({ value }) => value !== payload.value),
-                      );
+                      handleChangeOrSetSelected(state.selected.filter(({ value }) => value !== payload.value));
                     }
 
                     if (onceClickOption) hideOptions();
@@ -177,15 +170,7 @@ export const useSelect = ({
         };
       }),
     }));
-  }, [
-    options,
-    state.selected,
-    filteredOptions,
-    onceClickOption,
-    multiple,
-    hideOptions,
-    handleChangeOrSetSelected,
-  ]);
+  }, [options, state.selected, filteredOptions, onceClickOption, multiple, hideOptions, handleChangeOrSetSelected]);
 
   const getInputProps = useCallback(
     (props?: InputPropGetter) => {
