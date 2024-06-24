@@ -5,6 +5,10 @@ inputs:
     description: "Version Node.js"
     required: true
     default: "22.x"
+  registry-url:
+    description: "Packet Register"
+    required: false
+    default: "https://registry.npmjs.org"
 
 runs:
   using: "composite"
@@ -19,6 +23,7 @@ runs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node-version }}
+        registry-url: ${{ inputs.registry-url }}
         check-latest: true
         cache: "pnpm"
 
