@@ -105,6 +105,7 @@ export interface UseSelect {
   groupOptions: UseSelectGroupOption[];
   setSelected: (payload: SelectOption[]) => void;
   addSelected: (payload: SelectOption) => void;
+  setSearchValue: (payload: string) => void;
   removeSelected: (payload: SelectOption | SelectValue) => void;
   hideOptions: () => void;
   showOptions: () => void;

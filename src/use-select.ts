@@ -88,19 +88,26 @@ export const useSelect = ({
     dispatch({ type: UseSelectActionsTypes.CLOSE_MENU });
   }, []);
 
-  const handlerInputChange = useCallback(({ target }: ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: UseSelectActionsTypes.SET_SEARCH_VALUE, value: target.value });
+  const setSearchValue = useCallback((value: string) => {
+    dispatch({ type: UseSelectActionsTypes.SET_SEARCH_VALUE, value });
   }, []);
+
+  const handlerInputChange = useCallback(
+    ({ target }: ChangeEvent<HTMLInputElement>) => {
+      setSearchValue(target.value);
+    },
+    [setSearchValue],
+  );
 
   const handleChangeOrSetSelected = useCallback(
     (selected: SelectOption[]) => {
       if (isFunction(onChange) && !isUndefined(value)) {
-        onChange(selected);
+        onChange(multiple ? selected : selected[0]);
       } else {
         setSelected(selected);
       }
     },
-    [value, onChange, setSelected],
+    [value, multiple, onChange, setSelected],
   );
 
   const toggleOptions = useCallback(() => {
@@ -229,10 +236,10 @@ export const useSelect = ({
   }, [disabled, state.isOpen, hideOptions]);
 
   useUpdateEffect(() => {
-    if (isFunction(onChange) && !isEqual(state.selected, prevState?.selected)) {
+    if (isFunction(onChange) && isUndefined(value) && !isEqual(state.selected, prevState?.selected)) {
       onChange(multiple ? [...state.selected] : state.selected[0]);
     }
-  }, [state.selected, prevState?.selected, onChange]);
+  }, [state.selected, prevState?.selected, value, onChange]);
 
   useEffect(() => {
     if (isNil(value) && !isNil(prevValue)) setSelected([]);
@@ -255,6 +262,7 @@ export const useSelect = ({
     groupOptions,
     setSelected,
     addSelected,
+    setSearchValue,
     removeSelected,
     showOptions,
     hideOptions,
