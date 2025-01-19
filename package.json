@@ -5,12 +5,12 @@
   "description": "React hook to create the select component.",
   "main": "dist/react-use-select.cjs.js",
   "module": "dist/react-use-select.esm.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/react-use-select.d.ts",
   "source": "src/index.ts",
   "exports": {
     "./package.json": "./package.json",
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./dist/react-use-select.d.ts",
       "import": "./dist/react-use-select.esm.js",
       "require": "./dist/react-use-select.cjs.js"
     }
